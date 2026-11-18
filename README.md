@@ -10,10 +10,12 @@ An end-to-end data engineering project around a fictional West African mobile mo
 
 - Spring Boot **double-entry ledger**: the sum of all balances is always zero, checkable at any time
 - **Idempotent payments**: exactly-once enforced by a PostgreSQL `UNIQUE` constraint, tested under concurrent retries
-- **26 tests** with Testcontainers, CI on GitHub Actions
+- **27 Java + 22 Python tests** (Testcontainers), CI on GitHub Actions
 - Python generator of **realistic traffic** (paydays, Tabaski, day/night cycle) and fraud scenarios
-- Measured: **134,335 API calls at ~205 tx/s** on a laptop, ledger invariants still at zero
-- Next: CDC with Debezium and Kafka → streaming → lakehouse → dbt
+- **Found a modelling bug by profiling the data**: 19 % refused payments, 70 % of the money stuck at merchants. Fixed and guarded by a test: **2.3 % refusals**, +60 % throughput
+- Measured: **134,004 API calls at ~328 calls/s** on a laptop, ledger invariants still at zero
+- **CDC with Debezium → Kafka**: every committed change streamed from PostgreSQL's WAL; 133,845 transactions and 309,668 ledger entries reconciled with **zero gap**
+- Next: Avro + Schema Registry → lakehouse → Spark → dbt
 
 ### 📂 Other projects
 
@@ -29,16 +31,17 @@ An end-to-end data engineering project around a fictional West African mobile mo
 Distributed systems · network services · distributed databases · system performance ·
 data warehousing & BI · machine learning & deep learning
 
+
 ### 🧰 Tech I use
 
 **Backend:** Java · Spring Boot · REST APIs
-**Data:** SQL · PostgreSQL · Python · data warehousing & BI
+**Data:** SQL · PostgreSQL · Python · Kafka · Debezium (CDC) · data warehousing & BI
 **Tooling:** Docker · Docker Compose · Git · GitHub Actions · Testcontainers
 
 ### 📚 Learning now
 
 - Google Data Analytics certificate (in progress)
-- Data engineering: CDC, Kafka, streaming
+- Data engineering: Avro & Schema Registry, Spark Structured Streaming, lakehouse (MinIO + Delta/Iceberg)
 
 ### 🤝 Open to
 
